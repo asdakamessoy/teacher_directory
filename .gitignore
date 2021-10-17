@@ -1,0 +1,51 @@
+*.pyc
+*.sqlite3
+./democrance/settings_local.py
+/democrance/settings_local.py
+*settings_local.py
+media/*
+.DS_Store
+*/.DS_Store
+.idea/
+.env/
+venv/
+celerybeat-schedule
+csv_uploads/
+.cache
+/lib/
+/static
+/man
+*.log
+.Python
+.cache/
+.coverage
+.vagrant/
+bin/
+lib/
+share/
+include/
+kombu/
+pip-selfcheck.json
+democrance.log*
+
+# mypy related bits
+.mypy_cache
+.mypy.json
+
+# vim files
+*.swp
+*.swo
+
+# The following files are related to Google API access and shouldn't be tracked or added to the repository
+credentials.json
+token.json
+
+# Ignore any documentation build directories
+docs/*/_build/
+
+# Ignore compiled i18n files
+*.mo
+
+audit_audit.logs
+i18n/th/LC_MESSAGES/django.mo
+i18n/es/LC_MESSAGES/django.mo
