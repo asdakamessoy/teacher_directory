@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Teacher's Profile Upload</title>
+  </head>
+  <body> {% if messages %} {% for message in messages %} <div>
+      <strong>{{message|safe}}</strong>
+   <br/>
+     <br/>
+    </div> {% endfor %} {% else %} <b>{{order|safe}}</b>
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %} <label for="file1"> Upload a file</label>
+      <input type="file" id="file_uploaded" name="file">
+      <button type="submit">Upload</button>
+    </form> {% endif %}
+  </body>
+</html>
