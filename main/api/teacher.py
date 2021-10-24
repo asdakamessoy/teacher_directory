@@ -1,3 +1,7 @@
+import datetime
+import string
+import zipfile
+
 from django.contrib import messages
 from django.http import HttpResponseNotFound
 from django.http.response import JsonResponse, HttpResponse
@@ -6,7 +10,7 @@ from django.shortcuts import render
 from main.models import Teacher, CourseAllocation
 from main.utils.course_allocation import add_new_course
 from main.utils.decorators.authorized import authorized_access
-from main.utils.importer import get_data_from_upload
+from main.utils.importer import get_data_from_upload, random_string
 from main.utils.subject import get_subject_by_name
 from main.utils.teacher import get_teacher_from_email
 
@@ -129,10 +133,20 @@ def profile_upload(request, *args, **kwargs):
     }
     if request.method == "GET":
         return render(request, template, prompt)
-    csv_file = request.FILES["file"]
-    if not csv_file.name.endswith(".csv"):
-        messages.error(request, "File type not supported")
 
+    csv_file = request.FILES["file"]
+    image_files = request.FILES["image_files"]
+    folder_name = random_string(
+        size=8, allowed=string.digits, prefix=datetime.date.today().strftime("%Y-%m-%d")
+    )
+    content_upload_path = "images/" + folder_name
+    try:
+        with zipfile.ZipFile(image_files, "r") as zip_ref:
+            zip_ref.extractall(content_upload_path)
+        if not csv_file.name.endswith(".csv"):
+            messages.error(request, "File type not supported")
+    except Exception as error:
+        messages.error(request, error)
     data_dict, headers, errors = get_data_from_upload(
         csv_file,
         "csv",
@@ -149,7 +163,10 @@ def profile_upload(request, *args, **kwargs):
     for entry in data_dict:
         if entry.get("email"):
             teacher = get_teacher_from_email(
-                entry["email"], create_teacher=True, **entry
+                entry["email"],
+                create_teacher=True,
+                content_upload_path=content_upload_path,
+                **entry
             )
             if teacher:
                 subject_list = entry.get("subjects", "").split(",")
