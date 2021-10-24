@@ -13,7 +13,7 @@ def get_subject_by_name(registered_name, create_subject=False, **kwargs):
     """
     subject = None
     if registered_name:
-        subject = Subject.objects.filter(name=registered_name).first()
+        subject = Subject.objects.filter(name__iexact=registered_name).first()
 
     if registered_name and not subject and create_subject:
         # Remove any keys which won't map
